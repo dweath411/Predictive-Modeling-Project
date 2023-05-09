@@ -12,3 +12,5 @@ For this project, I used an already preprocessed data set, which will be uploade
 https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data
 
 The training, test, and predictions csv files can be found in the repository. 
+
+**It is important to note that most analysis is left out, as well as personal information.**
