@@ -10,3 +10,5 @@ Evaluation: Class evaluation is based on the following methodologies: KNN Method
 
 For this project, I used an already preprocessed data set, which will be uploaded. The raw data can be found here:
 https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data
+
+The training, test, and predictions csv files can be found in the repository. 
