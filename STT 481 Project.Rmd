@@ -1,6 +1,6 @@
 ---
-title: "STT 481 PROJECT"
-author: "Derien Weatherspoon"
+title: "STT FINAL PROJECT"
+author: 
 date: "2023-03-22"
 output:
   html_document:
@@ -67,7 +67,6 @@ dim(train)
 dim(test)
 dim(index)
 ```
-The pre-processed data has a lot of columns removed. 
 
 ## Glimpse on data 
 
@@ -77,8 +76,6 @@ glimpse(train)
 ```{r glimpse on test}
 glimpse(test)
 ```
-
-Some data types vary from train and test. Such as SalePrice and GarageCars variables. Notice how SalePrice in the testing set is all zeros.
 
 ## Show the distribution of SalePrice
 ```{r Distribution of SalePrice}
@@ -100,7 +97,9 @@ round(cor(train),
 OverallQual seems to have strongest correlation with SalePrice. 
 
 ## Plotting year build vs sale price.
+
 As you see in today's market, older homes usually that are kept in good condition can be a bit pricier than newer homes, because it is seen as "vintage". So I want to see what happens between the two variables.
+
 ```{r plot year built vs price, message=FALSE}
 ggplot(data = index[index$SalePrice > 0,], aes(x = YearBuilt, y = SalePrice)) +
   geom_point() +
@@ -193,7 +192,6 @@ Some important variables worth noting (highly significant) are OverallQual, Over
 linear.pred <- exp(predict(train.fit_2, test))
 head(linear.pred)
 ```
-Predicting a few housing prices given the data. I apply exp() to the predict function because I'm using a log transformation on train.fit_2.
 
 ## Error Rate for Linear Regression
 ```{r error for linear regression}
@@ -203,13 +201,12 @@ cv.glm.train.fit_2 <- cv.glm(train, glm.train.fit_2, K = 10)
 cvmse.linear <- cv.glm.train.fit_2$delta[2]
 cvmse.linear
 ```
-0.02508612 is the cv error rate I get for Linear Regression. 
 
 ```{r linear MSE}
 lin.error <- mean((linear.pred-test$SalePrice)^2)
 ```
 
-```{r linear MSE decimal}
+```{r}
 mean((train.fit_2$residuals)^2)
 ```
 
@@ -283,7 +280,6 @@ plot(fit.bwd.summary$bic, xlab = "Number of Variables ", ylab = "BIC", type = "l
 points(6,fit.bwd.summary$bic[6], col = "red", cex = 2, pch = 20)
 ```
 
-The forward and backward step selection plots are the same. This could be due to them picking the best variables for both selections. I will choose the best subset selection model though, since the number of variables is small.
 
 ## Test Error for Subset Selection
 
@@ -365,12 +361,6 @@ points(which.min(cv.error.bwd.fit), cv.error.bwd.fit[which.min(cv.error.bwd.fit)
        col = "yellow", cex = 3, pch = 20)
 ```
 
-Again, all the same. Each plot is showing the minimum coefficient value is 1, which is what my other data shows.
-
-## Which criterion do you use for selecting your model? Cp, BIC, Adjusted R-squared, or CV?  And explain why you choose this criterion.
-
-
-When selecting my model, I am taking the BIC into consideration most. This is because it takes in the least amount of variables to have a successful output.
 
 ## Explain some of the coefficients in the models
 ```{r selection coefficients}
@@ -378,7 +368,6 @@ coef(subset.fit, which.min(cv.error.sub.fit))
 coef(fit.fwd, which.min(cv.error.fwd.fit))
 coef(fit.bwd, which.min(cv.error.bwd.fit))
 ```
-In this case, I find the coefficients from all models because they are all selecting the same variable. It is interesting to note that the intercept for each model, they are all the same. 
 
 ## Perform prediction
 
@@ -396,9 +385,6 @@ head(fwd.predictions)
 bwd.predictions <- exp(predict.regsubsets(subset.fit, newdata = test, id = which.min(cv.error.bwd.fit)))
 head(bwd.predictions)
 ```
-
-The predictions for all are the same as expected, since all the models are the same too.
-
 
 ## Stepwise Selection MSE's
 
@@ -431,7 +417,6 @@ bestridge_lambda <- cv.ridge$lambda.min # best tuning parameter
 bestridge_lambda
 plot(cv.ridge)
 ```
-The best lambda value corresponds with 0.04734258 for seed of 1 for Ridge regression.
 
 ## Lasso Regression
 
@@ -444,19 +429,16 @@ bestlasso_lambda <- cv.lasso$lambda.min # best tuning parameter
 bestlasso_lambda
 plot(cv.lasso)
 ```
-The best lambda value corresponds with 0.002146928. Lasso does better at interpretation because it turns more variables into zero, so there will be fewer variables to deal with during interpretation. 
 
 ## Explain the coefficients for Ridge and Lasso
 
 ```{r ridge coefficients}
 coef(ridge.fit, s = bestridge_lambda)
 ```
-These are the coefficient values for ridge regression when the best lambda value is chosen. All variables are included.
 
 ```{r Lasso coefficients}
 coef(lasso.fit, s = bestlasso_lambda)
 ```
-These are the coefficient values for lasso regression when the best lambda value is chosen. Normally, some coefficients shouldn't have a value, but then because of the transformations all coefficients are included in this lasso regression.
 
 ## Perform Predictions on Ridge and Lasso
 
@@ -532,14 +514,12 @@ coef(train.gam, complete = T)
 train.tree <- tree(SalePrice ~ ., data = train)
 summary(train.tree)
 ```
-There are only 6 variables the decision tree decided to use. Also, the tree has 12 terminal nodes, which is relatively large, but not for this data set.
 
 ## Glimpse at the tree
 
 ```{r tree}
 train.tree
 ```
-Choosing node 7 here. This node asked whether or not OverallQual was greater than 8.5. If OverallQual was in this threshold, the tree split the average, and if the house had an OverallQual which was greater, then the price of the house is predicted to be higher than 388500.
 
 ## Plot the tree
 
@@ -584,7 +564,6 @@ cv.train
 plot(cv.train$k, cv.train$dev, type = "b", main = "cv errors plot")
 plot(cv.train$size, cv.train$dev, type = "b", main = "best size plot")
 ```
-Here it is verified that 12 is the best size for the tree, visually.
 
 ## Pruning the Tree
 
@@ -594,7 +573,6 @@ plot(pruned.tree)
 text(pruned.tree, pretty = 1)
 pruned.tree
 ```
-Looking at the differences between the pruned tree and the unpruned tree, there is no difference at all in the chosen node of 7 with the best size of 11. In this case, I am changing the best size down to 5 as a standard, just to make the plotted tree look readable, and to still include node 7.
 
 ## Pruned Tree Predictions
 
@@ -602,7 +580,6 @@ Looking at the differences between the pruned tree and the unpruned tree, there 
 pruned.pred <- predict(pruned.tree, newdata = test)
 head(pruned.pred)
 ```
-Since the pruned and unpruned tree are the same, I am seeing the same predictions as well.
 
 ## Pruned Tree Errors
 
@@ -618,7 +595,6 @@ sqrt(ncol(train) - 1) # 4.79... ~ 5
 rf.train <- randomForest(SalePrice ~ ., data = train, mtry = 5, importance = T, ntree = 1000)
 rf.train
 ```
-Here I found the value of mtry to be 5, then fit a randomForest model with mtry of 5, and number of trees to be 1000.
 
 ## Checking Importance
 
@@ -626,7 +602,6 @@ Here I found the value of mtry to be 5, then fit a randomForest model with mtry 
 importance(rf.train)
 varImpPlot(rf.train)
 ```
-From the plot, it looks like OverallQual, X2ndFlrSF and X1stFlrSF are the most important when it comes to MSE. MoSold and LowQualFinSF have almost no importance.
 
 ## Random Forest Predictions
 
@@ -661,7 +636,6 @@ train.boost <- gbm(SalePrice ~., data = train, distribution = "gaussian", n.tree
 train.boost
 summary(train.boost)
 ```
-23 predictors were used in the boosting model, 5 of them having non-zero influence. The 5 predictors that some non-zero influence are: OverallQual, GarageCars, X1stFlrSF, FullBath, and YearBuilt. OverallQual has the highest relative influence in the boosting model.
 
 ## Boosting Predictions
 
@@ -683,7 +657,6 @@ boosting.error <- mean((boosting.pred - test$SalePrice)^2)
 ncol(train) - 1 # number of predictors
 bag.train <- randomForest(SalePrice ~., data = train, mtry = 23, importance = T) 
 ```
-Setting mtry to 23, I determined in the same chunk that the number of predictors should be 23.
 
 ## Bagging Importance
 
@@ -691,7 +664,6 @@ Setting mtry to 23, I determined in the same chunk that the number of predictors
 importance(bag.train)
 varImpPlot(bag.train)
 ```
-Just like before, the most important predictors are the same as the other methods. OverallQual, X1stFlrSF, X2ndFlrSF.
 
 ## Bagging Predictions
 
@@ -699,7 +671,6 @@ Just like before, the most important predictors are the same as the other method
 bag.pred <- predict(bag.train, newdata = test)
 head(bag.pred)
 ```
-Predictions line up for housing prices.
 
 ## Bagging Errors
 
@@ -723,7 +694,6 @@ paste(c('Random Forest MSE:',rf.error))
 paste(c('Boosting MSE:',boosting.error))
 paste(c('Bagging MSE:',bag.error))
 ```
-KNN has the lowest MSE, while Linear Regression has the highest. My question is, will these play out the same way using the Kaggle score?
 
 # Which method do I think will perform the best?
 
@@ -835,19 +805,3 @@ write.csv(bag.df, file='TestPredictions_Bagging.csv', row.names = FALSE)
 
 # Kaggle Score: 0.15406
 ```
-
-# Discussion on why some methods performed better or worst
-
-The first method I want to mention is the Generalized Additive Model. As my best model, I was not expecting this model to perform the way it did. Though, I think this could attributed to carefully looking at the data and choosing variables to put a spline on based on if it is linear or not, and how easy it was to tell if I was overfitting or not.
-
-Next, I want to talk about how the decision tree performed better than the pruned tree. Initially, I was expecting the pruned tree to perform better just because it is a more specified version of the decision tree, but I think this ultimately led to its downfall.
-
-As for the worst method, I am not too surprised by it being the boosting model. I found the number of predictors to try to be 23, and the model suggested that 100 trees was optimal still. I feel like this is the reason the model did the worst, but even so, I tried 1000 trees and the model actually performed worse than with 100 trees. Potentially, I could change the number of predictors used, instead of the optimal amount.
-
-# Conclusion / Summary
-
-Overall, I am happy that I was able to get at least model under a score of 0.14. Using a variety of methods on this data set showed me how different outcomes can be, and the importance of being able to test out many different methods, instead of just going with one I am comfortable with. Though, every model seemed to give good predictions when it came to housing prices, even the boosting model and that performed the worst. I think I can say overall that the models made in this project can somewhat accurately depict housing prices in Iowa. 
-
-# Discussion for the future
-
-In the future, I think that there are a number of different things I could look into for this data specifically. With more time, I could investigate the variables a bit more indepth, and try to apply the investigations to the models built. I could look into things like does having more full baths over half baths affect things like house price, even if the number of bedrooms are not ideal. 
