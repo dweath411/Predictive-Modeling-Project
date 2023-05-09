@@ -7,3 +7,6 @@ Metric: Submissions are evaluated on Root-Mean-Squared-Error (RMSE) between the 
   ###### Ignore *Metric*, this was submitted to Kaggle to produce these scores.
  
 Evaluation: Class evaluation is based on the following methodologies: KNN Methods, Linear Regression, Subset Selection, Shrinkage Methods, Generalized Additive Models, Regression Trees, Bagging, Random Forest, and Boosting methods. Extracted from these models will be the Estimated Test Errors (CV Estimate) and True Test Errors.
+
+For this project, I used an already preprocessed data set, which will be uploaded. The raw data can be found here:
+https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data
